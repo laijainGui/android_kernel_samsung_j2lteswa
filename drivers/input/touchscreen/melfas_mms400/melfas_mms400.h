@@ -35,7 +35,6 @@
 #include <asm/uaccess.h>
 #include <linux/regulator/consumer.h>
 #include <linux/pinctrl/consumer.h>
-#include <linux/vmalloc.h>
 
 #include "melfas_mms400_reg.h"
 

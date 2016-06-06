@@ -1660,7 +1660,7 @@ static int ic_version_check(struct bt532_ts_info *info)
 
 	ret = read_data(client, BT532_CHIP_REVISION, data, 8);
 	if (ret < 0) {
-		tsp_debug_err(true, &info->client->dev,"%s: fail fw_minor_version\n", __func__);
+		tsp_debug_err(true, &info->client->dev,"%s: fail fw_major_version\n", __func__);
 		goto error;
 	}
 
@@ -2462,6 +2462,11 @@ static bool ts_set_touchmode(u16 value){
 		up(&misc_info->work_lock);
 		return -1;
 	}
+	//wakeup cmd
+	write_cmd(misc_info->client, 0x0A);
+	usleep_range(20 * 1000, 20 * 1000);
+	write_cmd(misc_info->client, 0x0A);
+	usleep_range(20 * 1000, 20 * 1000);
 
 	if (misc_info->touch_mode == TOUCH_POINT_MODE) {
 		/* factory data */
@@ -2566,6 +2571,11 @@ static bool ts_set_touchmode2(u16 value)
 		up(&misc_info->work_lock);
 		return -1;
 	}
+	//wakeup cmd
+	write_cmd(misc_info->client, 0x0A);
+	usleep_range(20 * 1000, 20 * 1000);
+	write_cmd(misc_info->client, 0x0A);
+	usleep_range(20 * 1000, 20 * 1000);
 
 	if (misc_info->touch_mode == TOUCH_POINT_MODE) {
 		/* factory data */
@@ -2670,6 +2680,11 @@ static bool ts_set_touchmode3(u16 value)
 		up(&misc_info->work_lock);
 		return -1;
 	}
+	//wakeup cmd
+	write_cmd(misc_info->client, 0x0A);
+	usleep_range(20 * 1000, 20 * 1000);
+	write_cmd(misc_info->client, 0x0A);
+	usleep_range(20 * 1000, 20 * 1000);
 
 	if (misc_info->touch_mode == TOUCH_POINT_MODE) {
 		/* factory data */
@@ -3025,7 +3040,16 @@ static void get_fw_ver_ic(void *device_data)
 	int ret;
 
 	set_default_result(info);
+
+	down(&info->work_lock);
+	//wakeup cmd
+	write_cmd(misc_info->client, 0x0A);
+	usleep_range(20 * 1000, 20 * 1000);
+	write_cmd(misc_info->client, 0x0A);
+	usleep_range(20 * 1000, 20 * 1000);
+
 	ret = ic_version_check(info);
+	up(&info->work_lock);
 	if (ret < 0) {
 		tsp_debug_info(true, &client->dev, "%s: version check error\n", __func__);
 		return;

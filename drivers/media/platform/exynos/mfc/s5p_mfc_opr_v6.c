@@ -2524,6 +2524,11 @@ static int s5p_mfc_init_decode(struct s5p_mfc_ctx *ctx)
 	/* Enable realloc interface if SEI is enabled */
 	if (dec->sei_parse && FW_HAS_SEI_S3D_REALLOC(dev))
 		reg |= (0x1 << S5P_FIMV_D_SEI_NEED_INIT_BUFFER_SHIFT);
+
+	if (IS_MFCv92(dev)) {
+		/* Enable recovery SEI parsing */
+		reg |= (0x1 << S5P_FIMV_D_SEI_RECOVERY_PARSING_ENABLE);
+	}
 	WRITEL(reg, S5P_FIMV_D_SEI_ENABLE);
 
 	WRITEL(ctx->inst_no, S5P_FIMV_INSTANCE_ID);

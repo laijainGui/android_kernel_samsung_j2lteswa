@@ -2916,14 +2916,6 @@ int decon_esd_panel_reset(struct decon_device *decon)
 		}
 	}
 
-	if (panel->ops->displayon_late) {
-		ret = panel->ops->displayon_late(dsim);
-		if (ret) {
-			dsim_err("%s : failed to panel display on_late\n", __func__);
-			goto reset_fail;
-		}
-	}
-
 	esd->queuework_pending = 0;
 
 	if (decon->pdata->psr_mode == DECON_MIPI_COMMAND_MODE)

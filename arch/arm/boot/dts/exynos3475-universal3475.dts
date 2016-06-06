@@ -798,6 +798,7 @@
 		status = "okay";
 		samsung,i2c-sda-delay = <100>;
 		samsung,i2c-max-bus-freq = <400000>;
+		samsung,reset-before-trans;
 
 		pinctrl-names = "default";
 		pinctrl-0 = <&hs_i2c7_bus>;
@@ -821,6 +822,7 @@
 		status = "okay";
 		samsung,i2c-sda-delay = <100>;
 		samsung,i2c-max-bus-freq = <400000>;
+		samsung,reset-before-trans;
 
 		pinctrl-names = "default";
 		pinctrl-0 = <&hs_i2c8_bus>;

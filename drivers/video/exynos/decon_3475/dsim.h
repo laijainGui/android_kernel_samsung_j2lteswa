@@ -129,7 +129,6 @@ struct dsim_panel_ops {
 	int (*early_probe)(struct dsim_device *dsim);
 	int	(*probe)(struct dsim_device *dsim);
 	int	(*displayon)(struct dsim_device *dsim);
-	int	(*displayon_late)(struct dsim_device *dsim);
 	int	(*exit)(struct dsim_device *dsim);
 	int	(*init)(struct dsim_device *dsim);
 };
@@ -169,13 +168,6 @@ struct dsim_device {
 	struct pinctrl_state *turnon_tes;
 	struct pinctrl_state *turnoff_tes;
 	struct dsim_clks_param clks_param;
-
-#ifdef CONFIG_DECON_MIPI_DSI_CLK_SWITCH
-	int		hs_clk_mode;
-	int		hs_clk_size;
-	int		hs_clk_list[10];
-#endif
-
 	struct regulator *lcd_vdd;
 	struct regulator *lcd_vdd_2;
 	struct panel_private priv;

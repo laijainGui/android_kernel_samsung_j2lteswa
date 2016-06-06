@@ -75,7 +75,7 @@ static const struct smtc_reg_data setup_reg[] = {
 	},
 	{
 		.reg = SX9500_CPS_CTRL0_REG,
-		.val = 0x10, /* SCANPERIOD: 60ms */
+		.val = 0x10,
 	},
 	{
 		.reg = SX9500_CPS_CTRL1_REG,
@@ -83,11 +83,11 @@ static const struct smtc_reg_data setup_reg[] = {
 	},
 	{
 		.reg = SX9500_CPS_CTRL2_REG,
-		.val = 0x57, /* CS1 GAIN : x8, FREQ: 167 KHz */
+		.val = 0x57,
 	},
 	{
 		.reg = SX9500_CPS_CTRL3_REG,
-		.val = 0x02, /* RAWFILT: Medium */
+		.val = 0x02,
 	},
 	{
 		.reg = SX9500_CPS_CTRL4_REG,
@@ -95,7 +95,7 @@ static const struct smtc_reg_data setup_reg[] = {
 	},
 	{
 		.reg = SX9500_CPS_CTRL5_REG,
-		.val = 0x36, /* AVGPOSFILT: 1-1/64, AVGNEGFILT: 1-1/64 */
+		.val = 0x0E,
 	},
 	{
 		.reg = SX9500_CPS_CTRL6_REG,

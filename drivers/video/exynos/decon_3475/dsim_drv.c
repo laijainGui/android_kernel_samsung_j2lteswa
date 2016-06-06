@@ -856,8 +856,6 @@ static int dsim_enable(struct dsim_device *dsim)
 
 	dsim_reg_init(dsim->id, &dsim->lcd_info, dsim->data_lane_cnt);
 
-	dsim_reg_prepare_clocks(&dsim->clks_param);
-
 	dsim_reg_enable_clocks(dsim->id, &dsim->clks_param,
 				DSIM_LANE_CLOCK | dsim->data_lane);
 

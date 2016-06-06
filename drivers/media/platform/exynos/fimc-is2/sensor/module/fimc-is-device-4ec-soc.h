@@ -22,6 +22,13 @@
 #define LOAD_FILE_PATH "/data/media/0/fimc-is-device-4ec-soc-reg.h"
 #endif
 
+/* Since anti-banding 60Hz auto setting cause shutter & gain problem
+* such as ISO gain and brightness on recording video under low-light condition,
+* 4EC sensor have to use 50Hz auto (default) setting only even if CSC setting is 60Hz.
+* This feature was decided by IQ and Reliability part on 2015.9.16.
+*/
+#define USE_ANTIBANDING_50HZ_ONLY
+
 #define SENSOR_S5K4EC_INSTANCE	0
 #define SENSOR_S5K4EC_NAME	SENSOR_NAME_S5K4EC
 #define SENSOR_S5K4EC_DRIVING
@@ -165,7 +172,9 @@ struct fimc_is_module_4ec {
 	struct s5k4ecgx_framesize preview;
 };
 
+#ifndef USE_ANTIBANDING_50HZ_ONLY
 static int sensor_4ec_s_anti_banding(struct v4l2_subdev *subdev, int anti_banding);
+#endif
 static int sensor_4ec_pre_flash_start(struct v4l2_subdev *subdev);
 static int sensor_4ec_pre_flash_stop(struct v4l2_subdev *subdev);
 static int sensor_4ec_main_flash_start(struct v4l2_subdev *subdev);

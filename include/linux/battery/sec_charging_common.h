@@ -631,13 +631,7 @@ struct sec_battery_platform_data {
 	bool fake_capacity;
 	bool wchg_ctl_en;
 	bool always_enable;
-
-#if defined(CONFIG_SW_SELF_DISCHARGING)
-	int self_discharging_temp_block;
-	int self_discharging_volt_block;
-	int self_discharging_temp_recov;
-#endif
-
+	
 	/* ADC setting */
 	unsigned int adc_check_count;
 	/* ADC type for each channel */

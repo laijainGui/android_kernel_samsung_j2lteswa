@@ -2350,11 +2350,11 @@ static const u32 s5k4ecgx_init_reg2[] = {
 //System Clock & Output clock (Pclk)
 	0x002A021A,
 	0x0F123A98,	//REG_TC_IPRM_OpClk4KHz_0 //SCLK : 60Mhz
-	0x0F1229FE,	//REG_TC_IPRM_MinOutRate4KHz_0
-	0x0F122AF8,	//REG_TC_IPRM_MaxOutRate4KHz_0
+	0x0F122904,	//REG_TC_IPRM_MinOutRate4KHz_0
+	0x0F1229FE,	//REG_TC_IPRM_MaxOutRate4KHz_0
 	0x0F124F1A,	//REG_TC_IPRM_MinOutRate4KHz_1
-	0x0F1229FE,	//REG_TC_IPRM_MinOutRate4KHz_1 //PCLK Min : 43Mhz
-	0x0F122AF8,	//REG_TC_IPRM_MaxOutRate4KHz_1 //PCLK Max : 44Mhz
+	0x0F122904,	//REG_TC_IPRM_MinOutRate4KHz_1 //PCLK Min : 43Mhz
+	0x0F1229FE,	//REG_TC_IPRM_MaxOutRate4KHz_1 //PCLK Max : 44Mhz
 
 //==================================================================================
 // 11.Auto Flicker Detection
@@ -3433,8 +3433,8 @@ static const u32 s5k4ecgx_init_reg2[] = {
 	0x0F120280,	//REG_0TC_PCFG_usWidth
 	0x0F1201E0,	//REG_0TC_PCFG_usHeight
 	0x0F120005,	//REG_0TC_PCFG_Format //5:YUV}, 7:RAW}, 9:JPEG
-	0x0F122AF8,	//REG_0TC_PCFG_usMaxOut4KHzRate
-	0x0F1229FE,	//REG_0TC_PCFG_usMinOut4KHzRate
+	0x0F1229FE,	//REG_0TC_PCFG_usMaxOut4KHzRate
+	0x0F122904,	//REG_0TC_PCFG_usMinOut4KHzRate
 	0x0F120100,	//REG_0TC_PCFG_OutClkPerPix88
 	0x0F120300,	//REG_0TC_PCFG_uBpp88
 	0x0F120012,	//REG_0TC_PCFG_PVIMask //[1]:PCLK Inversion
@@ -3463,8 +3463,8 @@ static const u32 s5k4ecgx_init_reg2[] = {
 	0x0F120A10,	//REG_0TC_CCFG_usWidth //2576
 	0x0F12078C,	//REG_0TC_CCFG_usHeight //1932
 	0x0F120005,	//REG_0TC_CCFG_Format //5:YUV}, 7:RAW}, 9:JPEG
-	0x0F122AF8,	//REG_0TC_CCFG_usMaxOut4KHzRate
-	0x0F1229FE,	//REG_0TC_CCFG_usMinOut4KHzRate
+	0x0F1229FE,	//REG_0TC_CCFG_usMaxOut4KHzRate
+	0x0F122904,	//REG_0TC_CCFG_usMinOut4KHzRate
 	0x0F120100,	//REG_0TC_CCFG_OutClkPerPix88
 	0x0F120300,	//REG_0TC_CCFG_uBpp88
 	0x0F120012,	//REG_0TC_CCFG_PVIMask //[1]:PCLK Inversion
@@ -3921,6 +3921,13 @@ static const u32 s5k4ecgx_WB_Auto[] = {
 	0x00287000,
 	0x002A04E6,
 	0x0F12077F,
+
+	0x002A1826,
+	0x0F120100, //fls_afl_FlashWP_Weight2_0_
+	0x0F1200C0, //fls_afl_FlashWP_Weight2_1_
+	0x0F120080, //fls_afl_FlashWP_Weight2_2_
+	0x0F12000A, //fls_afl_FlashWP_Weight2_3_
+	0x0F120000, //fls_afl_FlashWP_Weight2_4_
 };
 
 static const u32 s5k4ecgx_WB_Sunny[] = {
@@ -3940,6 +3947,13 @@ static const u32 s5k4ecgx_WB_Sunny[] = {
 
 	0x002A04C6, //RGB gain changed
 	0x0F120001,
+
+	0x002A1826,
+	0x0F120000, //fls_afl_FlashWP_Weight2_0_
+	0x0F120000, //fls_afl_FlashWP_Weight2_1_
+	0x0F120000, //fls_afl_FlashWP_Weight2_2_
+	0x0F120000, //fls_afl_FlashWP_Weight2_3_
+	0x0F120000, //fls_afl_FlashWP_Weight2_4_
 };
 
 static const u32 s5k4ecgx_WB_Cloudy[] = {
@@ -3959,6 +3973,13 @@ static const u32 s5k4ecgx_WB_Cloudy[] = {
 
 	0x002A04C6,
 	0x0F120001,
+
+	0x002A1826,
+	0x0F120000, //fls_afl_FlashWP_Weight2_0_
+	0x0F120000, //fls_afl_FlashWP_Weight2_1_
+	0x0F120000, //fls_afl_FlashWP_Weight2_2_
+	0x0F120000, //fls_afl_FlashWP_Weight2_3_
+	0x0F120000, //fls_afl_FlashWP_Weight2_4_
 };
 
 static const u32 s5k4ecgx_WB_Tungsten[] = {
@@ -3978,6 +3999,13 @@ static const u32 s5k4ecgx_WB_Tungsten[] = {
 
 	0x002A04C6,
 	0x0F120001,
+
+	0x002A1826,
+	0x0F120000, //fls_afl_FlashWP_Weight2_0_
+	0x0F120000, //fls_afl_FlashWP_Weight2_1_
+	0x0F120000, //fls_afl_FlashWP_Weight2_2_
+	0x0F120000, //fls_afl_FlashWP_Weight2_3_
+	0x0F120000, //fls_afl_FlashWP_Weight2_4_
 };
 
 static const u32 s5k4ecgx_WB_Fluorescent[] = {
@@ -3997,6 +4025,13 @@ static const u32 s5k4ecgx_WB_Fluorescent[] = {
 
 	0x002A04C6,
 	0x0F120001,
+
+	0x002A1826,
+	0x0F120000, //fls_afl_FlashWP_Weight2_0_
+	0x0F120000, //fls_afl_FlashWP_Weight2_1_
+	0x0F120000, //fls_afl_FlashWP_Weight2_2_
+	0x0F120000, //fls_afl_FlashWP_Weight2_3_
+	0x0F120000, //fls_afl_FlashWP_Weight2_4_
 };
 
 static const u32 s5k4ecgx_WDR_on[] = {
@@ -7412,20 +7447,6 @@ static const u32 s5k4ecgx_Flash_init[] = {
 	0x0F120100,
 	0x0F120100,
 	0x0F120100,
-
-	0x002A1826,
-
-	0x0F120100,	/* fls_afl_FlashWP_Weight  flash NB default */
-	0x0F1200C0,
-	0x0F120080,
-	0x0F12000A,
-	0x0F120000,
-
-	0x0F120030,	/* fls_afl_FlashWP_Weight  flash NB default */
-	0x0F120040,
-	0x0F120048,
-	0x0F120050,
-	0x0F120060,
 
 	0x002A4784,
 	0x0F1200A0,	/* TNP_Regs_FlsWeightRIn  weight tune start in*/

@@ -682,6 +682,18 @@ static int sensor_4ec_write_regs_from_sd(struct v4l2_subdev *sd, const char *nam
 	*(data_buf + 6) = '\0';
 
 	start = strnstr(sensor_4ec_regs_table, name, sensor_4ec_regs_table_size);
+
+	do {
+		if (*(start + strlen(name)) == '[') {
+			cam_info("break to search (%s) \n", name);
+			break;
+		} else {
+			cam_info("searching (%s) \n", name);
+			start = start + strlen(name);
+		}
+		start = strnstr(start, name, strlen(start));
+	} while(start != NULL);
+
 	if (unlikely(start == NULL)) {
 		cam_err("start is NULL\n");
 		return -ENODATA;
@@ -1389,6 +1401,7 @@ p_err:
 	return ret;
 }
 
+#ifndef USE_ANTIBANDING_50HZ_ONLY
 static int sensor_4ec_s_anti_banding(struct v4l2_subdev *subdev, int anti_banding)
 {
 	int ret = 0;
@@ -1437,6 +1450,7 @@ p_err:
 
 	return ret;
 }
+#endif
 
 static int sensor_4ec_s_frame_rate(struct v4l2_subdev *subdev, int frame_rate)
 {
@@ -3487,10 +3501,12 @@ static int sensor_4ec_s_ctrl(struct v4l2_subdev *subdev, struct v4l2_control *ct
 		}
 		break;
 	case V4L2_CID_CAMERA_ANTI_BANDING:
+#ifndef USE_ANTIBANDING_50HZ_ONLY
 		ret = sensor_4ec_s_anti_banding(subdev, ctrl->value);
 		if (ret < 0) {
 			err("%s: sensor_4ec_s_anti_banding fail.\n", __FUNCTION__);
 		}
+#endif
 		break;
 	case V4L2_CID_CAMERA_TOUCH_AF_START_STOP:
 		cam_dbg("V4L2_CID_CAMERA_TOUCH_AF_START_STOP E \n");

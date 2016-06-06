@@ -289,9 +289,10 @@ static void tc300k_release_all_fingers(struct tc300k_data *data)
 
 static void tc300k_reset(struct tc300k_data *data)
 {
+	disable_irq_nosync(data->client->irq);
+
 	tc300k_release_all_fingers(data);
 
-	disable_irq(data->client->irq);
 	data->pdata->keyled(false);
 	data->pdata->power(false);
 

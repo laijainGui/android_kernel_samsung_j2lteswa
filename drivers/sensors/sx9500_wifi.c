@@ -441,13 +441,27 @@ static ssize_t sx9500_read_data_show(struct device *dev,
 static ssize_t sx9500_sw_reset_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
+	int ret = 0;
 	struct sx9500_p *data = dev_get_drvdata(dev);
+#if 0
+	if (atomic_read(&data->enable) == ON)
+		sx9500_set_enable(data, OFF);
 
+	sx9500_set_mode(data, SX9500_MODE_SLEEP);
+	ret = sx9500_i2c_write(data, SX9500_SOFTRESET_REG, SX9500_SOFTRESET);
+	msleep(300);
+
+	sx9500_initialize_chip(data);
+	sx9500_set_mode(data, SX9500_MODE_NORMAL);
+
+	if (atomic_read(&data->enable) == ON)
+		sx9500_set_enable(data, ON);
+#endif
 	pr_info("[SX9500_WIFI]: %s\n", __func__);
 	sx9500_set_offset_calibration(data);
 	msleep(400);
 	sx9500_get_data(data);
-	return snprintf(buf, PAGE_SIZE, "%d\n", 0);
+	return snprintf(buf, PAGE_SIZE, "%d\n", ret);
 }
 
 static ssize_t sx9500_freq_store(struct device *dev,
@@ -809,6 +823,7 @@ static struct attribute *sx9500_attributes[] = {
 static struct attribute_group sx9500_attribute_group = {
 	.attrs = sx9500_attributes
 };
+
 static void sx9500_touch_process(struct sx9500_p *data, u8 flag)
 {
 	u8 status = 0;

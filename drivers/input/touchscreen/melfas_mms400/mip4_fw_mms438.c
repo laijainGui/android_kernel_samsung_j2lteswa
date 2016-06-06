@@ -335,12 +335,7 @@ int mms_flash_fw(struct mms_ts_info *info, const u8 *fw_data, size_t fw_size, bo
 
 	//Read firmware file
 	fw_hdr = (struct mip_bin_hdr *)fw_data;
-	img = vzalloc(sizeof(*img) * fw_hdr->section_num);
-	if (!img) {
-		tsp_debug_err(true, &client->dev, "Failed to img allocate memory\n");
-		nRet = -ENOMEM;
-		goto err_alloc_img;
-	}
+	img = kzalloc(sizeof(*img) * fw_hdr->section_num, GFP_KERNEL);
 
 	//Check firmware file
 	if (memcmp(FW_CHIP_CODE, &fw_hdr->tag[4], 4)) {
@@ -430,20 +425,9 @@ int mms_flash_fw(struct mms_ts_info *info, const u8 *fw_data, size_t fw_size, bo
 	offsetStart = offsetStart * 1024;
 
 	//Load firmware data
-	data = vzalloc(sizeof(u8) * fw_hdr->binary_length);
-	if (!data) {
-		tsp_debug_err(true, &client->dev, "Failed to data allocate memory\n");
-		nRet = -ENOMEM;
-		goto err_alloc_data;
-	}
-
+	data = kzalloc(sizeof(u8) * fw_hdr->binary_length, GFP_KERNEL);
 	size = fw_hdr->binary_length;
-	cpydata = vzalloc(ISC_PAGE_SIZE);
-	if (!cpydata) {
-		tsp_debug_err(true, &client->dev, "Failed to cpydata allocate memory\n");
-		nRet = -ENOMEM;
-		goto err_alloc_cpydata;
-	}
+	cpydata = kzalloc(ISC_PAGE_SIZE, GFP_KERNEL);
 
 	//Check firmware size
 	if (size % ISC_PAGE_SIZE != 0)
@@ -539,19 +523,16 @@ int mms_flash_fw(struct mms_ts_info *info, const u8 *fw_data, size_t fw_size, bo
 	nRet = 0;
 	tsp_debug_dbg(true, &client->dev,"%s [DONE]\n", __func__);
 	tsp_debug_info(true, &client->dev,"Firmware update completed\n");
-	goto DONE;
+	goto EXIT;
 
 ERROR:
 	tsp_debug_err(true, &client->dev,"%s [ERROR]\n", __func__);
 	tsp_debug_err(true, &client->dev,"Firmware update failed\n");
-DONE:
-	vfree(cpydata);
-err_alloc_cpydata:
-	vfree(data);
-err_alloc_data:
+	goto EXIT;
+
 EXIT:
-	vfree(img);
-err_alloc_img:
+	kfree(img);
+
 	return nRet;
 }
 
@@ -596,7 +577,7 @@ int mms_flash_fw(struct mms_ts_info *info, const u8 *fw_data, size_t fw_size, bo
 	int offset = 0;
 	int offset_start = 0;
 	int bin_size = 0;
-	u8 *bin_data = 0;
+	u8 *bin_data;
 	u16 tail_size = 0;
 	u8 tail_mark[4] = MIP_BIN_TAIL_MARK;
 	u16 ver_chip[MMS_FW_MAX_SECT_NUM];
@@ -660,7 +641,7 @@ int mms_flash_fw(struct mms_ts_info *info, const u8 *fw_data, size_t fw_size, bo
 					__func__, ver_chip[0], ver_chip[1], ver_chip[2], ver_chip[3]);
 
 			//Compare version
-			if ((ver_chip[2] >= bin_info->ver_app) && (ver_chip[3] >= bin_info->ver_param)) {
+			if ((ver_chip[0] == bin_info->ver_boot) && (ver_chip[1] == bin_info->ver_core) && (ver_chip[2] == bin_info->ver_app) && (ver_chip[3] == bin_info->ver_param)) {
 				tsp_debug_info(true, &client->dev, "%s - Chip firmware is already up-to-date\n", __func__);
 				ret = fw_err_uptodate;
 				goto ERROR;
@@ -670,13 +651,7 @@ int mms_flash_fw(struct mms_ts_info *info, const u8 *fw_data, size_t fw_size, bo
 
 	//Read bin data
 	bin_size = bin_info->bin_length;
-	bin_data = vzalloc(sizeof(u8) * bin_size);
-	if (!bin_data) {
-		tsp_debug_err(true, &client->dev, "Failed to img allocate memory\n");
-		ret = -ENOMEM;
-		goto err_alloc_bin_data;
-	}
-
+	bin_data = kzalloc(sizeof(u8) * (bin_size), GFP_KERNEL);
 	memcpy(bin_data, fw_data, bin_size);
 
 	//Erase first page
@@ -745,16 +720,17 @@ int mms_flash_fw(struct mms_ts_info *info, const u8 *fw_data, size_t fw_size, bo
 		}
 	}
 
-	tsp_debug_dbg(true, &client->dev, "%s [DONE]\n", __func__);
 	goto EXIT;
 
 ERROR:
 	//Reset chip
 	mms_reboot(info);
+
 	tsp_debug_err(true, &client->dev, "%s [ERROR]\n", __func__);
-EXIT:
-	vfree(bin_data);
-err_alloc_bin_data:
+
+EXIT:	
+	tsp_debug_dbg(true, &client->dev, "%s [DONE]\n", __func__);
+
 	return ret;
 }
 

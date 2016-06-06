@@ -192,7 +192,6 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
 # "make" in the configured kernel build directory always uses that.
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
-export KBUILD_BUILDHOST := $(SUBARCH)
 ARCH		?=arm
 CROSS_COMPILE	?=../toolchains/UBERTC/arm-eabi-4.9/bin/arm-eabi-
 
@@ -242,8 +241,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Wl,--gc-sections -Wl,--strip-all -Ofast -fgraphite -fomit-frame-pointer -flto -funroll-loops -ffunction-sections -fno-asynchronous-unwind-tables
-HOSTCXXFLAGS = -Ofast -fgraphite
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fgraphite -fno-tree-vectorize -fomit-frame-pointer -flto -funroll-loops
+HOSTCXXFLAGS = -Ofast -fgraphite -fno-tree-vectorize
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -375,7 +374,9 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
-		   -fdiagnostics-show-option -Werror
+		   -fdiagnostics-show-option -Werror \
+		   -ffunction-sections -Wl,--gc-sections \
+		   -fno-asynchronous-unwind-tables -Wl,--strip-all
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__

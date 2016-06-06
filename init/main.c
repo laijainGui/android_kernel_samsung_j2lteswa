@@ -74,9 +74,6 @@
 #include <linux/ptrace.h>
 #include <linux/blkdev.h>
 #include <linux/elevator.h>
-#if defined(CONFIG_SEC_INITCALL_DEBUG)
-#include <linux/sec_debug.h>
-#endif
 
 #include <asm/io.h>
 #include <asm/bugs.h>
@@ -674,11 +671,6 @@ static int __init_or_module do_one_initcall_debug(initcall_t fn)
 	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
 	pr_debug("initcall %pF returned %d after %lld usecs\n",
 		 fn, ret, duration);
-
-#if defined(CONFIG_SEC_INITCALL_DEBUG)
-	if (SEC_INITCALL_DEBUG_MIN_TIME < duration)
-		sec_initcall_debug_add(fn, duration);
-#endif
 
 	return ret;
 }

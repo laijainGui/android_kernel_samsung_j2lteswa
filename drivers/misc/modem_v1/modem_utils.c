@@ -39,6 +39,7 @@
 #include <linux/gpio.h>
 #include <linux/delay.h>
 #include <linux/wakelock.h>
+#include <linux/exynos-ss.h>
 
 #include "modem_prj.h"
 #include "modem_utils.h"
@@ -1166,4 +1167,10 @@ void __ref modemctl_notify_event(enum modemctl_event evt)
 {
 	raw_notifier_call_chain(&cp_crash_notifier, evt, NULL);
 }
+
+void mif_set_snapshot(bool enable)
+{
+	exynos_ss_set_enable("log_kevents", enable);
+}
+
 

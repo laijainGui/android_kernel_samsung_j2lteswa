@@ -1022,22 +1022,22 @@ static int cm36672p_parse_dt(struct device *dev,
 		ps_reg_init_setting[PS_THD_LOW][CMD] = CANCEL_LOW_THD;
 	}
 
-	ret = of_property_read_u32(np, "cm36672p,ps_conf1", &temp);
+	ret = of_property_read_u32(np, "cm36672p,ps_it", &temp);
 	if (ret < 0) {
 		SENSOR_ERR("Cannot set ps_it\n");
 		ps_reg_init_setting[PS_CONF1][CMD] = DEFAULT_CONF1;
 	} else {
-		SENSOR_ERR("conf1: 0x%4x\n", temp);
-		ps_reg_init_setting[PS_CONF1][CMD] = temp;
+		temp = temp << 1;
+		ps_reg_init_setting[PS_CONF1][CMD] |= temp;
 	}
 
-	ret = of_property_read_u32(np, "cm36672p,ps_conf3", &temp);
+	ret = of_property_read_u32(np, "cm36672p,led_current", &temp);
 	if (ret < 0) {
 		SENSOR_ERR("Cannot set led_current\n");
 		ps_reg_init_setting[PS_CONF3][CMD] = DEFAULT_CONF3;
 	} else {
-		SENSOR_ERR("conf3: 0x%4x\n", temp);
-		ps_reg_init_setting[PS_CONF3][CMD] = temp;
+		temp = temp << 8;
+		ps_reg_init_setting[PS_CONF3][CMD] |= temp;
 	}
 
 	ret = of_property_read_u32(np, "cm36672p,default_trim",
@@ -1308,13 +1308,31 @@ static int cm36672p_i2c_remove(struct i2c_client *client)
 
 static int cm36672p_suspend(struct device *dev)
 {
+	struct cm36672p_data *data = dev_get_drvdata(dev);
+	int enable;
+
 	SENSOR_INFO("is called.\n");
+
+	enable = atomic_read(&data->enable);
+
+	if (enable == 1) {
+		disable_irq(data->irq);
+	}
 	return 0;
 }
 
 static int cm36672p_resume(struct device *dev)
 {
+	struct cm36672p_data *data = dev_get_drvdata(dev);
+	int enable;
+
 	SENSOR_INFO("is called.\n");
+
+	enable = atomic_read(&data->enable);
+
+	if (enable == 1){
+		enable_irq(data->irq);
+	}
 	return 0;
 }
 
